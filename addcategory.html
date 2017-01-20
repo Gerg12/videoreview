@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Add Category</title>
+	<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
+</head>
+<body>
+	
+	<div class="container">
+		<div class="col-xs-6">
+			<h3>Add Category</h3>
+			<input type="text" class="new-cat">
+			<button class="btn btn-primary">Submit</button>
+		</div>
+		<div class="col-xs-6">
+			<h3>Current Categories</h3>
+			<ul class="cat-list">
+				
+			</ul>
+		</div>
+	</div>
+
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script>
+	var baseUrl = "http://localhost:3000";
+	var currentCats = [];
+	var submit = document.querySelector(".btn");
+	var newCatInput = document.querySelector(".new-cat");
+
+	function getCategories(){
+		$.ajax({
+			method:"GET",
+			url: baseUrl + "/categories",
+			dataType:"json",
+			beforeSend: () => { console.log('getting categories') }
+		})
+		.done(data => {
+			data.forEach(d => {
+				currentCats.push(d.title);
+			})
+			console.log(currentCats);
+			displayCats();
+		})
+		.fail(err => {
+			console.error(err);
+		});
+	}
+
+	getCategories();
+	
+	function displayCats(){
+		currentCats.forEach((cat, i) => {
+			//document.querySelector(".cat-list").append = "<li>" + cat + "</li>";
+			document.querySelector(".cat-list").innerHTML += `<li data-id=${i+1}>${cat}</li>`;
+		})
+
+	}
+
+	submit.addEventListener('click', (e) => {
+		var newCat = newCatInput.value;
+		if (!newCat){
+			alert('Fill out the form!');
+			return;
+		}
+		if(currentCats.includes(newCat)){
+			alert('Category already exists');
+
+		}else{
+			addCategory(newCat);
+		}
+	});
+
+	function addCategory(cat){
+		
+		var obj = {
+			title: cat
+		}
+		console.log(obj)
+		$.ajax({
+			method:"post",
+			url: baseUrl + "/categories",
+			data: obj,
+			beforeSend: () => { console.log('adding category') }
+		})
+		.done(data => {
+			console.log( data );
+			document.querySelector(".cat-list").innerHTML += `<li data-id=${data.id}>${data.title}</li>`;
+		})
+		.fail(err => {
+			console.error(err);
+		});
+	}
+/*
+	TODO: 
+		1. Clear input field upon on category add success
+		2. Clean up multiple query selectors
+		3. Submit for when user hits return / enter key
+		4. Delete category
+		5. Update category spelling
+
+	
+*/
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+{
+  "games": [
+    {
+      "id": 1,
+      "title": "FF7",
+      "publisher": "SquareSoft",
+      "yearPublished": "1997",
+      "category": [
+        "RPG",
+        "JRPG"
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "id": 1,
+      "gameid": 1,
+      "rating": 5,
+      "comment": "This is the first comment for the first review",
+      "author": {
+        "username": "Tim Jones",
+        "email": "me@test.com"
+      }
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "title": "RPG"
+    },
+    {
+      "id": 2,
+      "title": "JRPG"
+    },
+    {
+      "title": "aaa",
+      "id": 3
+    },
+    {
+      "title": "ccc",
+      "id": 4
+    },
+    {
+      "title": "bbb",
+      "id": 5
+    }
+  ]
+}
