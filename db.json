@@ -16,11 +16,22 @@
       "id": 1,
       "gameid": 1,
       "rating": 5,
-      "comment": "This is the first comment for the first review",
+      "title": "Final Fantasy 7 Review",
+      "description": "This is the decription of a game in a review",
       "author": {
         "username": "Tim Jones",
         "email": "me@test.com"
       }
+    },
+    {
+      "title": "Test",
+      "description": "Test",
+      "id": 2
+    },
+    {
+      "title": "Test 2",
+      "description": "Test 2",
+      "id": 3
     }
   ],
   "categories": [

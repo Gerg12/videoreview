@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Add Review</title>
+	<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
+</head>
+<body>
+
+	<div class="container">
+		<div class="col-xs-6">
+			<div class="add-review">
+				<h3 class="add-review__head">Add Review</h3>
+				<div class="form-group">
+					<label for="review-title">Title</label>
+					<input id="review-title"  type="text"  class="add-review__title">
+				</div>
+				<div class="form-area">
+				    <label for="review-description">Description</label><br>
+				    <textarea id="review-description" class="add-review__descriptionl"  rows="3" cols="50"></textarea>
+				  </div>
+				<button class="btn btn-primary">Submit</button>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<h3>Current Reviews</h3>
+			<ul class="review-list">
+				
+			</ul>
+		</div>
+	</div>
+
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script>
+	var baseUrl = "http://localhost:3000";
+	var currentReviews = [];
+	var submit = document.querySelector(".btn");
+	var newReviewTitle = document.querySelector(".add-review__title");
+	var newReviewDescription = document.querySelector(".add-review__description");
+
+	function getReviews(){
+		$.ajax({
+			method:"GET",
+			url: baseUrl + "/reviews",
+			dataType:"json",
+			beforeSend: () => { console.log('getting reviews') }
+		})
+		.done(data => {
+			data.forEach(d => {
+				currentReviews.push(d.title);
+			})
+			console.log(currentReviews);
+			displayReviews();
+		})
+		.fail(err => {
+			console.error(err);
+		});
+	}
+
+	getReviews();
+	
+	function displayReviews(){
+		currentReviews.forEach((review, i) => {
+			//document.querySelector(".cat-list").append = "<li>" + cat + "</li>";
+			document.querySelector(".review-list").innerHTML += `<li data-id=${i+1}>${review}</li>`;
+		})
+
+	}
+
+	submit.addEventListener('click', (e) => {
+		var newRevTitle = newReviewTitle.value;
+		var newRevDescription = newReviewTitle.value;
+		
+		if (!newRevTitle){
+			alert('Fill out the form!');
+			return;
+		}
+		if(currentReviews.includes(newRevTitle)){
+			alert('Review already exists');
+
+		}else{
+			addReview(newRevTitle, newRevDescription);
+		}
+	});
+
+	function addReview(reviewTitle, reviewDescription){
+		
+		var obj = {
+			title: reviewTitle,
+			description: reviewDescription
+
+		}
+		console.log(obj)
+		$.ajax({
+			method:"post",
+			url: baseUrl + "/reviews",
+			data: obj,
+			beforeSend: () => { console.log('adding review') }
+		})
+		.done(data => {
+			console.log( data );
+			document.querySelector(".review-list").innerHTML += `<li data-id=${data.id}>${data.title}</li>`;
+		})
+		.fail(err => {
+			console.error(err);
+		});
+	}
+/*
+	TODO: 
+		1. Clear input field upon on category add success
+		2. Clean up multiple query selectors
+		3. Submit for when user hits return / enter key
+		4. Delete category
+		5. Update category spelling
+
+	
+*/
+	</script>
+
+</body>
+</html>
