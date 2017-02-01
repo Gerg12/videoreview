@@ -21,7 +21,7 @@
 				</div>
 				<div class="form-area">
 				    <label for="review-description">Description</label><br>
-				    <textarea id="review-description" class="add-review__descriptionl"  rows="3" cols="50"></textarea>
+				    <textarea id="review-description" class="add-review__description"  rows="3" cols="50"></textarea>
 				  </div>
 				<button class="btn btn-primary">Submit</button>
 			</div>
@@ -40,8 +40,15 @@
 	var baseUrl = "http://localhost:3000";
 	var currentReviews = [];
 	var submit = document.querySelector(".btn");
+	
+
+	var inputs = document.querySelectorAll(".add-review__title, .add-review__description");
+
+
 	var newReviewTitle = document.querySelector(".add-review__title");
 	var newReviewDescription = document.querySelector(".add-review__description");
+
+	console.log(inputs)
 
 	function getReviews(){
 		$.ajax({
@@ -75,17 +82,31 @@
 	submit.addEventListener('click', (e) => {
 		var newRevTitle = newReviewTitle.value;
 		var newRevDescription = newReviewDescription.value;
-		
-		if (!newRevTitle){
-			alert('Fill out the form!');
-			return;
-		}
-		if(currentReviews.includes(newRevTitle)){
-			alert('Review already exists');
 
-		}else{
-			addReview(newRevTitle, newRevDescription);
-		}
+		var data = {}
+		inputs.forEach(input =>{
+			if(!input.value){
+				alert('fill ouf the form');
+				return;
+			}
+
+			if(currentReviews.includes(input.value)){
+				alert('review with that name already exists');
+			}else{
+
+			}
+		});
+		
+		// if (!newRevTitle){
+		// 	alert('Fill out the form!');
+		// 	return;
+		// }
+		// if(currentReviews.includes(newRevTitle)){
+		// 	alert('Review already exists');
+
+		// }else{
+		// 	addReview(newRevTitle, newRevDescription);
+		// }
 	});
 
 	function addReview(reviewTitle, reviewDescription){
@@ -105,6 +126,11 @@
 		.done(data => {
 			console.log( data );
 			document.querySelector(".review-list").innerHTML += `<li data-id=${data.id}>${data.title}</li>`;
+			inputs.forEach(input => {
+				input.value = '';
+			})
+			// document.querySelector(".add-review__description").value = ``;
+			// document.querySelector(".add-review__title").value  = ``;
 		})
 		.fail(err => {
 			console.error(err);
